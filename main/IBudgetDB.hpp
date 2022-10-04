@@ -21,6 +21,10 @@ public:
             return money_ / ((date::sys_days(lastDay) - date::sys_days(firstDay)).count() + 1);
         }
 
+        date::year_month_day getEndDate() const noexcept {
+            return budgetMonth_.year() / budgetMonth_.month() / date::last;
+        }
+
     };
 
     ~IBudgetDB() noexcept = default;

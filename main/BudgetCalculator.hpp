@@ -21,7 +21,7 @@ private:
     static uint32_t getDailyAmount(IBudgetDB::Budget const &budget) noexcept;
 
     static int
-    calculateDaysBetweenDate(date::year_month_day const &start, date::year_month_day const &end) noexcept;
+    calculateDaysBetween(date::year_month_day const &start, date::year_month_day const &end) noexcept;
 
     static BudgetRange
     filterBudgetList(std::vector<IBudgetDB::Budget> const &allBudget, date::year_month_day const &start,

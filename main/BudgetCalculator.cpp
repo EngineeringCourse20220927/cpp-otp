@@ -38,18 +38,11 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
     }
 
     if (budgetRange.start == budgetRange.end) {
-        uint32_t const average = (*budgetRange.start).getDailyAmount();
-
-        uint32_t const days = calculateDaysBetweenDate(realStart, realEnd);
-
-        return average * days;
+        return (*budgetRange.start).getDailyAmount() * calculateDaysBetween(realStart, realEnd);
     }
 
-    uint32_t const startMonthAverage = (*budgetRange.start).getDailyAmount();
-    date::year_month_day const monthEnd = getLastDayOfMonth(budgetRange.start->budgetMonth_);
-    uint32_t const daysInFirstMonth = calculateDaysBetweenDate(realStart, monthEnd);
-
-    uint32_t const budgetFirstMonth = daysInFirstMonth * startMonthAverage;
+    uint32_t const budgetFirstMonth =
+            calculateDaysBetween(realStart, (*budgetRange.start).getEndDate()) * (*budgetRange.start).getDailyAmount();
 
     std::vector<IBudgetDB::Budget>::const_iterator it = budgetRange.start + 1U;
     uint32_t budgetBetween = 0;
@@ -60,7 +53,7 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
 
     uint32_t const endMonthAverage = (*budgetRange.end).getDailyAmount();
     date::year_month_day const monthStart = getFirstDayOfMonth(budgetRange.end->budgetMonth_);
-    uint32_t const daysInLastMonth = calculateDaysBetweenDate(monthStart, realEnd);
+    uint32_t const daysInLastMonth = calculateDaysBetween(monthStart, realEnd);
 
     uint32_t const budgetEndMonth = daysInLastMonth * endMonthAverage;
 
@@ -69,10 +62,9 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
     return total;
 }
 
-int BudgetCalculator::calculateDaysBetweenDate(date::year_month_day const &start,
-                                               date::year_month_day const &end) noexcept {
-    auto const dayDiff = date::sys_days(end) - date::sys_days(start);
-    return dayDiff.count() + 1;
+int BudgetCalculator::calculateDaysBetween(date::year_month_day const &start,
+                                           date::year_month_day const &end) noexcept {
+    return (date::sys_days(end) - date::sys_days(start)).count() + 1;
 }
 
 BudgetCalculator::BudgetRange
