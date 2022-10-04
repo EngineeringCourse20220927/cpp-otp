@@ -38,24 +38,17 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
     }
 
     Period period{realStart, realEnd};
-    if (budgetRange.start == budgetRange.end) {
-        return budgetRange.start->getDailyAmount() * period.getDayCount();
-    }
-
-    uint32_t const budgetFirstMonth = budgetRange.start->getDailyAmount() *
-                                      Period(period.getStart(), budgetRange.start->getEndDate()).getDayCount();
-
-    auto it = budgetRange.start + 1U;
+    auto budget = budgetRange.start;
     uint32_t budgetBetween = 0;
-    while (it != budgetRange.end) {
-        budgetBetween += it->getDailyAmount() * Period(it->getStartDate(), it->getEndDate()).getDayCount();
-        it++;
+    while (budget != budgetRange.end + 1) {
+        budgetBetween += budget->getDailyAmount() *
+                         Period(budget->getStartDate() > period.getStart() ? budget->getStartDate() : period.getStart(),
+                                budget->getEndDate() < period.getEnd() ? budget->getEndDate()
+                                                                       : period.getEnd()).getDayCount();
+        budget++;
     }
 
-    uint32_t const budgetEndMonth = budgetRange.end->getDailyAmount() *
-                                    Period(budgetRange.end->getStartDate(), period.getEnd()).getDayCount();
-
-    return budgetFirstMonth + budgetBetween + budgetEndMonth;
+    return budgetBetween;
 }
 
 BudgetCalculator::BudgetRange
