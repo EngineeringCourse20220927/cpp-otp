@@ -1,6 +1,7 @@
 
 #include "gtest/gtest.h"
 #include <stdexcept>
+#include "gmock/gmock.h"
 
 #include "BudgetDBMock.hpp"
 #include "../main/BudgetCalculator.hpp"
@@ -47,4 +48,23 @@ TEST(TestBudgetCalculator, testCalculate) {
                                                                 date::year(2019) / date::month(2) / date::day(2));
 
     ASSERT_EQ(budgetTooOldToValid, 33);
+}
+
+class StubBudgetDB : public IBudgetDB {
+public:
+    MOCK_METHOD0(findAll, std::vector<IBudgetDB::Budget>());
+};
+
+using ::testing::Return;
+
+TEST(TestBudgetCalculator, DailyAmount) {
+    StubBudgetDB stubBudgetDb;
+    BudgetCalculator budgetCalculator(stubBudgetDb);
+    ON_CALL(stubBudgetDb, findAll()).WillByDefault(
+            Return(std::vector<IBudgetDB::Budget>{IBudgetDB::Budget{2019, 1, 62}}));
+
+    auto amount = budgetCalculator.query(date::year(2019) / date::month(1) / date::day(5),
+                                         date::year(2019) / date::month(1) / date::day(9));
+
+    ASSERT_EQ(amount, 5 * 2);
 }
