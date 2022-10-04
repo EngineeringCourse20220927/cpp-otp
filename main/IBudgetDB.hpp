@@ -25,6 +25,9 @@ public:
             return budgetMonth_.year() / budgetMonth_.month() / date::last;
         }
 
+        date::year_month_day getStartDate() const noexcept {
+            return budgetMonth_.year() / budgetMonth_.month() / 1;
+        }
     };
 
     ~IBudgetDB() noexcept = default;

@@ -44,18 +44,15 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
     uint32_t const budgetFirstMonth =
             calculateDaysBetween(realStart, (*budgetRange.start).getEndDate()) * (*budgetRange.start).getDailyAmount();
 
-    std::vector<IBudgetDB::Budget>::const_iterator it = budgetRange.start + 1U;
+    auto it = budgetRange.start + 1U;
     uint32_t budgetBetween = 0;
     while (it != budgetRange.end) {
         budgetBetween += it->money_;
         it++;
     }
 
-    uint32_t const endMonthAverage = (*budgetRange.end).getDailyAmount();
-    date::year_month_day const monthStart = getFirstDayOfMonth(budgetRange.end->budgetMonth_);
-    uint32_t const daysInLastMonth = calculateDaysBetween(monthStart, realEnd);
-
-    uint32_t const budgetEndMonth = daysInLastMonth * endMonthAverage;
+    uint32_t const budgetEndMonth =
+            calculateDaysBetween((*budgetRange.end).getStartDate(), realEnd) * (*budgetRange.end).getDailyAmount();
 
     uint32_t const total = budgetFirstMonth + budgetBetween + budgetEndMonth;
 
