@@ -47,6 +47,9 @@ public:
     }
 
     int getDayCount() const noexcept {
+        if (start_ > end_) {
+            return 0;
+        }
         return (date::sys_days(end_) - date::sys_days(start_)).count() + 1;
     }
 
