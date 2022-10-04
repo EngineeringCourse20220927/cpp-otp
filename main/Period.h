@@ -7,6 +7,8 @@ class Period {
 public:
     Period(date::year_month_day const &start, date::year_month_day const &end) : start_(start), end_(end) {}
 
+    Period(date::year_month const &yearMonth) : start_(yearMonth / 1), end_(yearMonth / date::last) {}
+
     int getDayCount() const noexcept {
         if (start_ > end_) {
             return 0;

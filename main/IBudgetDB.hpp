@@ -17,21 +17,11 @@ public:
         uint32_t money_;
 
         uint32_t getDailyAmount() const noexcept {
-            date::year_month_day const lastDay = budgetMonth_.year() / budgetMonth_.month() / date::last;
-            date::year_month_day const firstDay = budgetMonth_.year() / budgetMonth_.month() / 1;
-            return money_ / ((date::sys_days(lastDay) - date::sys_days(firstDay)).count() + 1);
-        }
-
-        date::year_month_day getEndDate() const noexcept {
-            return budgetMonth_.year() / budgetMonth_.month() / date::last;
-        }
-
-        date::year_month_day getStartDate() const noexcept {
-            return budgetMonth_.year() / budgetMonth_.month() / 1;
+            return money_ / getPeriod().getDayCount();
         }
 
         Period getPeriod() const noexcept {
-            return Period{getStartDate(), getEndDate()};
+            return Period{budgetMonth_};
         }
 
         uint32_t getOverlappingAmount(const Period &period) const {
