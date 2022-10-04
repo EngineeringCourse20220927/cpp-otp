@@ -18,7 +18,7 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
     auto budget = allBudget.begin();
     uint32_t budgetBetween = 0;
     while (budget != allBudget.end()) {
-        budgetBetween += budget->getDailyAmount() * period.getOverlappingDayCount(budget->getPeriod());
+        budgetBetween += budget->getOverlappingAmount(period);
         budget++;
     }
 

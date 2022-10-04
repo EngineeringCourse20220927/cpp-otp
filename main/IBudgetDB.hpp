@@ -33,6 +33,11 @@ public:
         Period getPeriod() const noexcept {
             return Period{getStartDate(), getEndDate()};
         }
+
+        uint32_t getOverlappingAmount(const Period &period) const {
+            return getDailyAmount() * period.getOverlappingDayCount(getPeriod());
+        }
+
     };
 
     ~IBudgetDB() noexcept = default;
