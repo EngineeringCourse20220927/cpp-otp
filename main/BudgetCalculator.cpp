@@ -22,8 +22,8 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
 
     date::year_month_day const lastDayOfFoundMonth = getLastDayOfMonth(budgetRange.end->budgetMonth_);
     date::year_month_day const firstDayOfFoundMonth = getFirstDayOfMonth(budgetRange.start->budgetMonth_);
-    date::year_month_day realEnd;
-    date::year_month_day realStart;
+    date::year_month_day realEnd{};
+    date::year_month_day realStart{};
 
     if (lastDayOfFoundMonth < end) {
         realEnd = lastDayOfFoundMonth;
@@ -111,11 +111,9 @@ BudgetCalculator::filterBudgetList(std::vector<IBudgetDB::Budget> const &allBudg
 }
 
 date::year_month_day BudgetCalculator::getLastDayOfMonth(date::year_month const &yearMonth) noexcept {
-    date::year_month_day const date = yearMonth.year() / yearMonth.month() / date::last;
-    return date;
+    return yearMonth.year() / yearMonth.month() / date::last;
 }
 
 date::year_month_day BudgetCalculator::getFirstDayOfMonth(date::year_month const &yearMonth) noexcept {
-    date::year_month_day const date = yearMonth.year() / yearMonth.month() / 1;
-    return date;
+    return yearMonth.year() / yearMonth.month() / 1;
 }
