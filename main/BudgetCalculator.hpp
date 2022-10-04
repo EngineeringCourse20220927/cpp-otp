@@ -33,3 +33,20 @@ private:
 
     IBudgetDB &budgetDB_;
 };
+
+class Period {
+public:
+    Period(date::year_month_day const &start, date::year_month_day const &end) : start_(start), end_(end) {}
+
+    date::year_month_day const &getStart() const noexcept {
+        return start_;
+    }
+
+    date::year_month_day const &getEnd() const noexcept {
+        return end_;
+    }
+
+private:
+    date::year_month_day const start_;
+    date::year_month_day const end_;
+};
