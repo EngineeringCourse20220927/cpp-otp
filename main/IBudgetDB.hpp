@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include "date.h"
+#include "Period.h"
 
 class IBudgetDB {
 public:
@@ -27,6 +28,10 @@ public:
 
         date::year_month_day getStartDate() const noexcept {
             return budgetMonth_.year() / budgetMonth_.month() / 1;
+        }
+
+        Period getPeriod() const noexcept {
+            return Period{getStartDate(), getEndDate()};
         }
     };
 

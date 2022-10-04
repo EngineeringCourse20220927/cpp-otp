@@ -1,4 +1,4 @@
-set(Main_SRCS main.cpp AuthenticationService.cpp ProfileDao.cpp RsaTokenDao.cpp Context.cpp Birthday.cpp BudgetCalculator.cpp)
+set(Main_SRCS main.cpp AuthenticationService.cpp ProfileDao.cpp RsaTokenDao.cpp Context.cpp Birthday.cpp BudgetCalculator.cpp Period.h)
 
 include_directories(.)
 

@@ -32,28 +32,5 @@ private:
     static date::year_month_day getFirstDayOfMonth(date::year_month const &yearMonth) noexcept;
 
     IBudgetDB &budgetDB_;
-};
 
-class Period {
-public:
-    Period(date::year_month_day const &start, date::year_month_day const &end) : start_(start), end_(end) {}
-
-    date::year_month_day const &getStart() const noexcept {
-        return start_;
-    }
-
-    date::year_month_day const &getEnd() const noexcept {
-        return end_;
-    }
-
-    int getDayCount() const noexcept {
-        if (start_ > end_) {
-            return 0;
-        }
-        return (date::sys_days(end_) - date::sys_days(start_)).count() + 1;
-    }
-
-private:
-    date::year_month_day const start_;
-    date::year_month_day const end_;
 };
