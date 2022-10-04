@@ -9,7 +9,7 @@ BudgetCalculator::BudgetCalculator(IBudgetDB &budgetDB) : budgetDB_(budgetDB) {
 
 uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_month_day const end) {
     if (start > end) {
-        throw std::runtime_error("end is smaller than start");
+        return 0;
     }
 
     std::vector<IBudgetDB::Budget> allBudget = budgetDB_.findAll();

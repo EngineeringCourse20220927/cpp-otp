@@ -11,11 +11,6 @@ TEST(TestBudgetCalculator, testCalculate) {
     BudgetDBMock budgetDBMock;
     BudgetCalculator budgetCalculator(budgetDBMock);
 
-    EXPECT_THROW({
-                     budgetCalculator.query(date::year(2020) / date::month(1) / date::day(5),
-                                            date::year(2019) / date::month(1) / date::day(5));
-                 }, std::runtime_error);
-
     uint32_t const budgetInSameMonth = budgetCalculator.query(date::year(2019) / date::month(1) / date::day(1),
                                                               date::year(2019) / date::month(1) / date::day(5));
 
@@ -67,4 +62,16 @@ TEST(TestBudgetCalculator, DailyAmount) {
                                          date::year(2019) / date::month(1) / date::day(9));
 
     ASSERT_EQ(amount, 5 * 2);
+}
+
+TEST(TestBudgetCalculator, StartAfterEnd) {
+    StubBudgetDB stubBudgetDb;
+    BudgetCalculator budgetCalculator(stubBudgetDb);
+    ON_CALL(stubBudgetDb, findAll()).WillByDefault(
+            Return(std::vector<IBudgetDB::Budget>{}));
+
+    auto amount = budgetCalculator.query(date::year(2019) / date::month(1) / date::day(25),
+                                         date::year(2019) / date::month(1) / date::day(9));
+
+    ASSERT_EQ(amount, 0);
 }
