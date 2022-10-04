@@ -14,9 +14,17 @@ public:
 
         date::year_month budgetMonth_;
         uint32_t money_;
+
+        uint32_t getDailyAmount() const noexcept {
+            date::year_month_day const lastDay = budgetMonth_.year() / budgetMonth_.month() / date::last;
+            date::year_month_day const firstDay = budgetMonth_.year() / budgetMonth_.month() / 1;
+            return money_ / ((date::sys_days(lastDay) - date::sys_days(firstDay)).count() + 1);
+        }
+
     };
 
     ~IBudgetDB() noexcept = default;
 
     virtual std::vector<Budget> findAll() = 0; // fixme std::bad_alloc?
+
 };
