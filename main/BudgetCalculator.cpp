@@ -39,28 +39,23 @@ uint32_t BudgetCalculator::query(date::year_month_day const start, date::year_mo
 
     Period period{realStart, realEnd};
     if (budgetRange.start == budgetRange.end) {
-        return budgetRange.start->getDailyAmount() * calculateDaysBetween(period.getStart(), period.getEnd());
+        return budgetRange.start->getDailyAmount() * period.getDayCount();
     }
 
     uint32_t const budgetFirstMonth = budgetRange.start->getDailyAmount() *
-                                      calculateDaysBetween(period.getStart(), budgetRange.start->getEndDate());
+                                      Period(period.getStart(), budgetRange.start->getEndDate()).getDayCount();
 
     auto it = budgetRange.start + 1U;
     uint32_t budgetBetween = 0;
     while (it != budgetRange.end) {
-        budgetBetween += it->getDailyAmount() * calculateDaysBetween(it->getStartDate(), it->getEndDate());
+        budgetBetween += it->getDailyAmount() * Period(it->getStartDate(), it->getEndDate()).getDayCount();
         it++;
     }
 
     uint32_t const budgetEndMonth = budgetRange.end->getDailyAmount() *
-                                    calculateDaysBetween(budgetRange.end->getStartDate(), period.getEnd());
+                                    Period(budgetRange.end->getStartDate(), period.getEnd()).getDayCount();
 
     return budgetFirstMonth + budgetBetween + budgetEndMonth;
-}
-
-int BudgetCalculator::calculateDaysBetween(date::year_month_day const &start,
-                                           date::year_month_day const &end) noexcept {
-    return (date::sys_days(end) - date::sys_days(start)).count() + 1;
 }
 
 BudgetCalculator::BudgetRange
@@ -87,12 +82,4 @@ BudgetCalculator::filterBudgetList(std::vector<IBudgetDB::Budget> const &allBudg
         it++;
     }
     return budgetRange;
-}
-
-date::year_month_day BudgetCalculator::getLastDayOfMonth(date::year_month const &yearMonth) noexcept {
-    return yearMonth.year() / yearMonth.month() / date::last;
-}
-
-date::year_month_day BudgetCalculator::getFirstDayOfMonth(date::year_month const &yearMonth) noexcept {
-    return yearMonth.year() / yearMonth.month() / 1;
 }
